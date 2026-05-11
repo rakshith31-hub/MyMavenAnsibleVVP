@@ -1,18 +1,22 @@
+---
 - name: Deploy to Tomcat
   hosts: web
   become: yes
+
   tasks:
+
     - name: Copy WAR file to Tomcat
       copy:
-        src: /var/snap/jenkins/5022/workspace/anisible/target/MavenAnsibleWebApp1.war
-        dest: "/opt/tomcat/webapps/MyMavenAnsibleApp01.war"
+        src: /var/snap/jenkins/5022/workspace/TestAnsible/target/MavenAnsibleWebApp1.war
+        dest: /opt/tomcat/webapps/MyMavenAnsibleApp01.war
         remote_src: no
 
-    - name: Restart Tomcat
-      shell: |
-        /opt/tomcat/bin/shutdown.sh || true
-        sleep 5
-        /opt/tomcat/bin/startup.sh
+    - name: Stop Tomcat
+      shell: /opt/tomcat/bin/shutdown.sh || true
 
+    - name: Wait for Tomcat to stop
+      pause:
+        seconds: 5
 
-
+    - name: Start Tomcat
+      shell: /opt/tomcat/bin/startup.sh
